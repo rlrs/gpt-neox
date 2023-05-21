@@ -14,7 +14,7 @@
   # If you would like the code to create val and test datasets from your training set use the following instead
   # "split" determines the relative size of train, val, and test
 
-  "split": [995,4,1],
+  "split": "995,4,1",
   "data_path": "/home/ubuntu/data_text_document",
 
   #"vocab_file": "/mnt/ssd-1/data/gpt2-vocab.json",
