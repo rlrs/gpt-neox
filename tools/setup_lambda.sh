@@ -4,7 +4,8 @@ sudo apt install libaio-dev
 
 python -m venv .venv/
 . .venv/bin/activate
-pip3 install torch --index-url https://download.pytorch.org/whl/cu118
+pip install --upgrade pip wheel
+pip install torch --index-url https://download.pytorch.org/whl/cu118
 pip install -r requirements/requirements.txt
 pip install -r requirements/requirements-wandb.txt
 pip install -r requirements/requirements-flashattention.txt
