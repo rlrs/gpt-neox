@@ -24,6 +24,12 @@
   "mlp_type": "llama",
   "activation": "silu",
 
+  "attention_config": [[["flash"], 24]],
+
+  # init methods
+  "init_method": "small_init",
+  "output_layer_init_method": "wang_init",
+
   # optimizer settings
   "optimizer":
     {
@@ -44,8 +50,9 @@
       "contiguous_gradients": True,
     },
 
-  # batch / data settings
+  # batch / data settings (this is probably fine for 1 GPU)
   "train_micro_batch_size_per_gpu": 4,
+  "gas": 8,
   "data_impl": "mmap",
 
   # activation checkpointing
