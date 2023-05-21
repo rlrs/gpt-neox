@@ -7,7 +7,7 @@
   "num_layers": 24,
   "hidden_size": 2048,
   "num_attention_heads": 16,
-  "seq_length": 1024,
+  "seq_length": 2048,
   "max_position_embeddings": 1024,
   "pos_emb": "rotary",
   "rotary_pct": 1,
@@ -34,7 +34,7 @@
   "optimizer":
     {
       "type": "Adam",
-      "params": { "lr": 0.0002, "betas": [0.9, 0.95], "eps": 1.0e-8 },
+      "params": { "lr": 1e-4, "betas": [0.9, 0.95], "eps": 1.0e-8 },
     },
   "min_lr": 0.00002,
 
@@ -51,7 +51,7 @@
     },
 
   # batch / data settings (this is probably fine for 1 GPU)
-  "train_micro_batch_size_per_gpu": 4,
+  "train_micro_batch_size_per_gpu": 8,
   "gas": 8,
   "data_impl": "mmap",
 
@@ -79,8 +79,8 @@
     },
 
   # misc. training settings
-  "train_iters": 320000,
-  "lr_decay_iters": 320000,
+  "train_iters": 200000,
+  "lr_decay_iters": 200000,
   "distributed_backend": "nccl",
   "lr_decay_style": "cosine",
   "warmup": 0.01,
