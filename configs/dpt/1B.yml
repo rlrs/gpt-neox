@@ -8,7 +8,7 @@
   "hidden_size": 2048,
   "num_attention_heads": 16,
   "seq_length": 2048,
-  "max_position_embeddings": 1024,
+  "max_position_embeddings": 2048,
   "pos_emb": "rotary",
   "rotary_pct": 1,
   "no_weight_tying": true,
