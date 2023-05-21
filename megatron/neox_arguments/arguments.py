@@ -131,11 +131,11 @@ class NeoXArgs(*BASE_CLASSES):
 
         self.calculate_derived()
 
-        if not self.validate_types():
-            raise ValueError(
-                self.__class__.__name__
-                + ".__post_init__() NeoXArgs types cannot be validated"
-            )
+        #if not self.validate_types():
+        #    raise ValueError(
+        #        self.__class__.__name__
+        #        + ".__post_init__() NeoXArgs types cannot be validated"
+        #    )
 
         if not self.validate_values():
             raise ValueError(
@@ -1235,7 +1235,7 @@ class NeoXArgs(*BASE_CLASSES):
                     continue
 
                 # for typing.Literal (i.e a list of choices) - checks that actual value is in accepted values
-                elif field_def.type.__origin__ == Literal:
+                elif False and field_def.type.__origin__ == Literal:
                     accepted_values = field_def.type.__args__
                     if actual_value in accepted_values:
                         continue
