@@ -15,7 +15,7 @@
   # "split" determines the relative size of train, val, and test
 
   "split": [995,4,1],
-  "data_path": "/home/ubuntu/train-tiny.jsonl.zst",
+  "data_path": "/home/ubuntu/data_text_document",
 
   #"vocab_file": "/mnt/ssd-1/data/gpt2-vocab.json",
   #"merge_file": "/mnt/ssd-1/data/gpt2-merges.txt",

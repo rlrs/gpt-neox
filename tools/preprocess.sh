@@ -1,0 +1,1 @@
+python tools/preprocess_data.py --input ../train-tiny.jsonl.zst --tokenizer-type SPMTokenizer --vocab-file ../dpt1.model --output-prefix ../data
