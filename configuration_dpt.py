@@ -22,134 +22,101 @@ logger = logging.get_logger(__name__)
 
 class DPTConfig(PretrainedConfig):
     r"""
-    This is the configuration class to store the configuration of a [`GPTNeoModel`]. It is used to instantiate a GPT
-    Neo model according to the specified arguments, defining the model architecture. Instantiating a configuration with
-    the defaults will yield a similar configuration to that of the GPTNeo
-    [EleutherAI/gpt-neo-1.3B](https://huggingface.co/EleutherAI/gpt-neo-1.3B) architecture.
+    This is the configuration class to store the configuration of a [`GPTNeoXModel`]. It is used to instantiate an
+    GPTNeoX model according to the specified arguments, defining the model architecture. Instantiating a configuration
+    with the defaults will yield a similar configuration to that of the GPTNeoX
+    [EleutherAI/gpt-neox-20b](https://huggingface.co/EleutherAI/gpt-neox-20b) architecture.
 
     Configuration objects inherit from [`PretrainedConfig`] and can be used to control the model outputs. Read the
     documentation from [`PretrainedConfig`] for more information.
 
 
     Args:
-        vocab_size (`int`, *optional*, defaults to 50257):
-            Vocabulary size of the GPT Neo model. Defines the number of different tokens that can be represented by the
-            `inputs_ids` passed when calling [`GPTNeoModel`]. Vocabulary size of the model. Defines the different
-            tokens that can be represented by the *inputs_ids* passed to the forward method of [`GPTNeoModel`].
-        attention_types (`List`, *optional*, defaults to `[[["global", "local"], 12]]`):
-            The type of attention for each layer in a `List` of the following format `[[["attention_type"],
-            num_layerss]]` e.g. for a 24 layer model `[[["global"], 24]]` or `[[["global", "local"], 12]]` Choose the
-            value of `attention_type` from `["global", "local"]`
-        hidden_size (`int`, *optional*, defaults to 2048):
-            Dimensionality of the encoder layers and the pooler layer.
-        num_layers (`int`, *optional*, defaults to 24):
+        vocab_size (`int`, *optional*, defaults to 50432):
+            Vocabulary size of the GPTNeoX model. Defines the number of different tokens that can be represented by the
+            `inputs_ids` passed when calling [`GPTNeoXModel`].
+        hidden_size (`int`, *optional*, defaults to 6144):
+            Dimension of the encoder layers and the pooler layer.
+        num_hidden_layers (`int`, *optional*, defaults to 44):
             Number of hidden layers in the Transformer encoder.
-        num_heads (`int`, *optional*, defaults to 16):
+        num_attention_heads (`int`, *optional*, defaults to 64):
             Number of attention heads for each attention layer in the Transformer encoder.
-        intermediate_size (`int`, *optional*, defaults to 8192):
-            Dimensionality of the "intermediate" (i.e., feed-forward) layer in the Transformer encoder.
-        activation_function (`str` or `function`, *optional*, defaults to `"gelu_new"`):
+        intermediate_size (`int`, *optional*, defaults to 24576):
+            Dimension of the "intermediate" (i.e., feed-forward) layer in the Transformer encoder.
+        hidden_act (`str` or `function`, *optional*, defaults to `"gelu"`):
             The non-linear activation function (function or string) in the encoder and pooler. If string, `"gelu"`,
             `"relu"`, `"selu"` and `"gelu_new"` are supported.
-        embed_dropout (`float`, *optional*, defaults to 0.0):
-            The dropout probabilitiy for all fully connected layers in the embeddings, encoder, and pooler.
-        attention_dropout (`float`, *optional*, defaults to 0.0):
-            The dropout ratio for the attention probabilities.
+        rotary_pct (`float`, *optional*, defaults to 0.25):
+            percentage of hidden dimensions to allocate to rotary embeddings
+        rotary_emb_base (`int`, *optional*, defaults to 10000)
+            base for computing rotary embeddings frequency
         classifier_dropout (`float`, *optional*, defaults to 0.1):
-            Argument used when doing token classification, used in the model [`GPTNeoForTokenClassification`].
+            Argument used when doing token classification, used in the model [`GPTNeoXForTokenClassification`].
 
             The dropout ratio for the hidden layer.
         max_position_embeddings (`int`, *optional*, defaults to 2048):
             The maximum sequence length that this model might ever be used with. Typically set this to something large
             just in case (e.g., 512 or 1024 or 2048).
-        type_vocab_size (`int`, *optional*, defaults to 2):
-            The vocabulary size of the `token_type_ids` passed when calling [`GPTNeoModel`].
-        initializer_range (`float`, *optional*, defaults to 0.02):
+        initializer_range (`float`, *optional*, defaults to 1e-5):
             The standard deviation of the truncated_normal_initializer for initializing all weight matrices.
-        layer_norm_epsilon (`float`, *optional*, defaults to 1e-5):
+        layer_norm_eps (`float`, *optional*, defaults to 1e-12):
             The epsilon used by the layer normalization layers.
         use_cache (`bool`, *optional*, defaults to `True`):
             Whether or not the model should return the last key/values attentions (not used by all models). Only
             relevant if `config.is_decoder=True`.
-
-    Example:
+        use_parallel_residual (`bool`, *optional*, defaults to `True`):
+            Whether to use a "parallel" formulation in each Transformer layer, which can provide a slight training
+            speedup at large scales (e.g. 20B).
+        Example:
 
     ```python
-    >>> from transformers import GPTNeoConfig, GPTNeoModel
+    >>> from transformers import GPTNeoXConfig, GPTNeoXModel
 
-    >>> # Initializing a GPTNeo EleutherAI/gpt-neo-1.3B style configuration
-    >>> configuration = GPTNeoConfig()
+    >>> # Initializing a GPTNeoX gpt-neox-20b style configuration
+    >>> configuration = GPTNeoXConfig()
 
-    >>> # Initializing a model (with random weights) from the EleutherAI/gpt-neo-1.3B style configuration
-    >>> model = GPTNeoModel(configuration)
+    >>> # Initializing a model (with random weights) from the gpt-neox-20b style configuration
+    >>> model = GPTNeoXModel(configuration)  # doctest: +SKIP
 
     >>> # Accessing the model configuration
-    >>> configuration = model.config
+    >>> configuration = model.config  # doctest: +SKIP
     ```"""
-    model_type = "dpt"
-    keys_to_ignore_at_inference = ["past_key_values"]
-    attribute_map = {"num_attention_heads": "num_heads", "num_hidden_layers": "num_layers"}
+    model_type = "gpt_neox"
 
     def __init__(
         self,
-        vocab_size=32768,
+        vocab_size=50432,
+        hidden_size=6144,
+        num_hidden_layers=44,
+        num_attention_heads=64,
+        intermediate_size=24576,
+        hidden_act="gelu",
+        rotary_pct=0.25,
+        rotary_emb_base=10000,
+        classifier_dropout=0.1,
         max_position_embeddings=2048,
-        hidden_size=2048,
-        num_layers=24,
-        attention_types=[[["flash"], 24]],
-        num_heads=16,
-        intermediate_size=None,
-        window_size=256,
-        activation_function="silu",
-        resid_dropout=0.0,
-        embed_dropout=0.0,
-        attention_dropout=0.0,
-        classifier_dropout=0.0,
-        layer_norm_epsilon=1e-5,
         initializer_range=0.02,
+        layer_norm_eps=1e-5,
         use_cache=True,
-        bos_token_id=2,
-        eos_token_id=3,
+        bos_token_id=0,
+        eos_token_id=2,
+        tie_word_embeddings=False,
+        use_parallel_residual=True,
         **kwargs,
     ):
+        super().__init__(bos_token_id=bos_token_id, eos_token_id=eos_token_id, **kwargs)
         self.vocab_size = vocab_size
         self.max_position_embeddings = max_position_embeddings
         self.hidden_size = hidden_size
-        self.num_layers = num_layers
-        self.num_heads = num_heads
+        self.num_hidden_layers = num_hidden_layers
+        self.num_attention_heads = num_attention_heads
         self.intermediate_size = intermediate_size
-        self.window_size = window_size
-        self.activation_function = activation_function
-        self.resid_dropout = resid_dropout
-        self.embed_dropout = embed_dropout
-        self.attention_dropout = attention_dropout
+        self.hidden_act = hidden_act
+        self.rotary_pct = rotary_pct
+        self.rotary_emb_base = rotary_emb_base
         self.classifier_dropout = classifier_dropout
-        self.layer_norm_epsilon = layer_norm_epsilon
         self.initializer_range = initializer_range
+        self.layer_norm_eps = layer_norm_eps
         self.use_cache = use_cache
-
-        self.bos_token_id = bos_token_id
-        self.eos_token_id = eos_token_id
-
-        self.attention_types = attention_types
-        self.attention_layers = self.expand_attention_types_params(attention_types)
-
-        if len(self.attention_layers) != self.num_layers:
-            raise ValueError(
-                "Configuration for convolutional module is incorrect. "
-                "It is required that `len(config.attention_layers)` == `config.num_layers` "
-                f"but is `len(config.attention_layers) = {len(self.attention_layers)}`, "
-                f"`config.num_layers = {self.num_layers}`. "
-                "`config.attention_layers` is prepared using `config.attention_types`. "
-                "Please verify the value of `config.attention_types` argument."
-            )
-
-        super().__init__(bos_token_id=bos_token_id, eos_token_id=eos_token_id, **kwargs)
-
-    @staticmethod
-    def expand_attention_types_params(attention_types):
-        attentions = []
-        for item in attention_types:
-            for _ in range(item[1]):
-                attentions.extend(item[0])
-        return attentions
+        self.tie_word_embeddings = tie_word_embeddings
+        self.use_parallel_residual = use_parallel_residual

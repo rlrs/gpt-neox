@@ -127,12 +127,12 @@ class GPTNeoXAttention(nn.Module):
         self.head_size = self.hidden_size // self.num_attention_heads
         self.rotary_ndims = int(self.head_size * config.rotary_pct)
         max_positions = config.max_position_embeddings
-        # self.register_buffer(
-        #     "bias",
-        #     torch.tril(torch.ones((max_positions, max_positions), dtype=torch.bool)).view(
-        #         1, 1, max_positions, max_positions
-        #     ),
-        # )
+        self.register_buffer(
+            "bias",
+            torch.tril(torch.ones((max_positions, max_positions), dtype=torch.bool)).view(
+                1, 1, max_positions, max_positions
+            ),
+        )
         # self.register_buffer("masked_bias", torch.tensor(-1e9))
         self.rotary_emb = RotaryEmbedding(
             self.rotary_ndims, config.max_position_embeddings, base=config.rotary_emb_base
@@ -239,7 +239,7 @@ class GPTNeoXAttention(nn.Module):
         batch_size, num_attention_heads, query_length, attn_head_size = query.size()
         key_length = key.size(-2)
 
-        # causal_mask = self.bias[:, :, key_length - query_length : key_length, :key_length]
+        causal_mask = self.bias[:, :, key_length - query_length : key_length, :key_length]
 
         query = query.view(batch_size * num_attention_heads, query_length, attn_head_size)
         key = key.view(batch_size * num_attention_heads, key_length, attn_head_size)
@@ -345,8 +345,8 @@ class GPTNeoXMLP(nn.Module):
         self.w2 = nn.Linear(ff_dim, config.hidden_size, bias=False)
 
     def forward(self, hidden_states):
-        w1_out, _ = self.w1(hidden_states)
-        w3_out, _ = self.w3(hidden_states)
+        w1_out = self.w1(hidden_states)
+        w3_out = self.w3(hidden_states)
         return self.w2(self.act(w1_out) * w3_out)
 
 
